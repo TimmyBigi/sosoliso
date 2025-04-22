@@ -33,8 +33,8 @@ const userSchema = new mongoose.Schema(
 );
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
@@ -44,43 +44,28 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-// Method to compare passwords
+//compare passwords
 userSchema.methods.comparePassword = async function (candidatePassword) {
-    try {
-      return await bcrypt.compare(candidatePassword, this.password);
-    } catch (error) {
-      return false;
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    return false;
+  }
+};
+
+userSchema.methods.generateAuthToken = function () {
+  return jwt.sign(
+    {
+      userId: this._id,
+      email: this.email,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
     }
-  };
-  
-  // Generate JWT Token
-  userSchema.methods.generateAuthToken = function () {
-    return jwt.sign(
-      {
-        userId: this._id,
-        email: this.email,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      }
-    );
-  };
-  
-  // Generate Reset Password Token
-  userSchema.methods.generateResetToken = function () {
-    return jwt.sign(
-      {
-        userId: this._id,
-      },
-      process.env.JWT_RESET_SECRET,
-      {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      }
-    );
-  };
-  
-  const User = mongoose.model("User", userSchema);
-  
-  export default User;
-  
+  );
+};
+
+const User = mongoose.model("User", userSchema);
+
+export default User;

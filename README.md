@@ -117,6 +117,13 @@ Successful responses follow this format:
 
 ---
 
+
+## Postman Url Documentation
+https://documenter.getpostman.com/view/36618694/2sB2iwGaXn
+
+## Github Url 
+https://github.com/TimmyBigi/sosoliso.git
+
 ## 📜 License
 
 This project is licensed under the **MIT License**.

@@ -7,12 +7,10 @@ import flightRoute from "./src/resources/routes/flight.route.js";
 import adminRoute from "./src/resources/routes/admin.route.js";
 const app = express();
 
-// Logging
+// middelware
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Custom sanitize implementation (safer approach)
 app.use((req, res, next) => {
   if (req.query) {
     const sanitizedQuery = mongoSanitize.sanitize(req.query);
@@ -35,7 +33,8 @@ const limiter = rateLimit({
 });
 app.use("/api/v1/", limiter);
 
-// Test route
+
+
 app.get("/", (req, res) => {
   res.send("Welcome to Sosoliso!");
 });
